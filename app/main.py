@@ -1,10 +1,6 @@
 from fastapi import FastAPI
 
-# from app.models import (
-#     User,
-#     Project,
-#     Task
-# )
+
 
 from app.api.auth import router as auth_router
 from app.api.projects import router as project_router
