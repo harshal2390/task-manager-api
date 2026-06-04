@@ -11,27 +11,14 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    email: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-        index=True
-    )
+    email: Mapped[str] = mapped_column(String,unique=True,index=True)
 
     hashed_password: Mapped[str] = mapped_column(String)
 
     full_name: Mapped[str] = mapped_column(String)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow)
 
-    projects = relationship(
-        "Project",
-        back_populates="owner"
-    )
+    projects = relationship("Project",back_populates="owner")
 
-    assigned_tasks = relationship(
-        "Task",
-        back_populates="assignee"
-    )
+    assigned_tasks = relationship("Task",back_populates="assignee")

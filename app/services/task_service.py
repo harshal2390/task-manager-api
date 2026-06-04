@@ -9,44 +9,22 @@ from app.models.user import User
 
 
 
-from app.schemas.task import (
-    TaskCreate,
-    TaskUpdate,
-    TaskResponse
-)
+from app.schemas.task import (TaskCreate,TaskUpdate,TaskResponse)
 
 from app.core.enums import TaskStatus
 
 
-def create_task(
-    db: Session,
-    project_id: int,
-    task_data: TaskCreate,
-    current_user: User
-):
+def create_task(db: Session,project_id: int,task_data: TaskCreate,current_user: User):
 
-    project = (
-        db.query(Project)
-        .filter(Project.id == project_id)
-        .first()
-    )
+    project = (db.query(Project).filter(Project.id == project_id).first())
 
     if not project:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Project not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Project not found")
 
-    if project.owner_id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied"
-        )
+    if project.owner_id != current_user.id:raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Access denied")
 
-    task = Task(
-        title=task_data.title,
-        description=task_data.description,
-        status=task_data.status,
+    task = Task(title=task_data.title,description=task_data.description,
+status=task_data.status,
         priority=task_data.priority,
         assignee_id=task_data.assignee_id,
         project_id=project_id,
@@ -60,103 +38,49 @@ def create_task(
     return task
 
 
-def get_project_tasks(
-    db: Session,
-    project_id: int,
-    current_user: User,
-    status_filter: TaskStatus | None = None,
-    assignee_id: int | None = None
-):
+def get_project_tasks(db: Session,project_id: int,current_user: User,status_filter: TaskStatus | None = None,assignee_id: int | None = None):
 
-    project = (
-        db.query(Project)
-        .filter(Project.id == project_id)
-        .first()
-    )
+    project = (db.query(Project).filter(Project.id == project_id).first())
 
     if not project:
-        raise HTTPException(
-            status_code=404,
-            detail="Project not found"
-        )
+        raise HTTPException(status_code=404,detail="Project not found")
 
     if project.owner_id != current_user.id:
-        raise HTTPException(
-            status_code=403,
-            detail="Access denied"
-        )
+        raise HTTPException(status_code=403,detail="Access denied")
 
-    query = (
-        db.query(Task)
-        .filter(Task.project_id == project_id)
-    )
+    query = (db.query(Task).filter(Task.project_id == project_id))
 
     if status_filter:
-        query = query.filter(
-            Task.status == status_filter
-        )
+        query = query.filter(Task.status == status_filter)
 
     if assignee_id:
-        query = query.filter(
-            Task.assignee_id == assignee_id
-        )
+        query = query.filter(Task.assignee_id == assignee_id)
 
     return query.all()
 
 
-def update_task(
-    db: Session,
-    task_id: int,
-    task_data: TaskUpdate,
-    current_user: User
-):
+def update_task(db: Session,task_id: int,task_data: TaskUpdate,current_user: User):
 
-    task = (
-        db.query(Task)
-        .filter(Task.id == task_id)
-        .first()
-    )
+    task = (db.query(Task).filter(Task.id == task_id).first())
 
     if not task:
-        raise HTTPException(
-            status_code=404,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404,detail="Task not found")
 
-    project = (
-        db.query(Project)
-        .filter(Project.id == task.project_id)
-        .first()
-    )
+    project = (db.query(Project).filter(Project.id == task.project_id).first())
 
-    is_project_owner = (
-        project.owner_id == current_user.id
-    )
+    is_project_owner = (project.owner_id == current_user.id)
 
     is_assignee = (
         task.assignee_id == current_user.id
     )
 
-    if not (
-        is_project_owner or is_assignee
-    ):
-        raise HTTPException(
-            status_code=403,
-            detail="Permission denied"
-        )
+    if not (is_project_owner or is_assignee):
+        raise HTTPException(status_code=403,detail="Permission denied")
 
-    update_data = (
-        task_data.model_dump(
-            exclude_unset=True
-        )
-    )
+    update_data = (task_data.model_dump(exclude_unset=True))
 
     for field, value in update_data.items():
-        setattr(
-            task,
-            field,
-            value
-        )
+        setattr(task,field,value)
 
     db.commit()
 
@@ -165,45 +89,22 @@ def update_task(
     return task
 
 
-def delete_task(
-    db: Session,
-    task_id: int,
-    current_user: User
-):
+def delete_task(db: Session,task_id: int,current_user: User):
 
-    task = (
-        db.query(Task)
-        .filter(Task.id == task_id)
-        .first()
-    )
+    task = (db.query(Task).filter(Task.id == task_id).first())
 
     if not task:
-        raise HTTPException(
-            status_code=404,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404,detail="Task not found")
 
-    project = (
-        db.query(Project)
-        .filter(Project.id == task.project_id)
-        .first()
+    project = (db.query(Project).filter(Project.id == task.project_id).first()
     )
 
-    is_project_owner = (
-        project.owner_id == current_user.id
-    )
+    is_project_owner = (project.owner_id == current_user.id)
 
-    is_assignee = (
-        task.assignee_id == current_user.id
-    )
+    is_assignee = (task.assignee_id == current_user.id)
 
-    if not (
-        is_project_owner or is_assignee
-    ):
-        raise HTTPException(
-            status_code=403,
-            detail="Permission denied"
-        )
+    if not (is_project_owner or is_assignee):
+        raise HTTPException(status_code=403,detail="Permission denied")
 
     db.delete(task)
 
@@ -214,46 +115,21 @@ def delete_task(
     }
     
     
-def update_task_status(
-    db: Session,
-    task_id: int,
-    new_status: TaskStatus,
-    current_user: User
-):
+def update_task_status(db: Session,task_id: int,new_status: TaskStatus,current_user: User):
 
-    task = (
-        db.query(Task)
-        .filter(Task.id == task_id)
-        .first()
-    )
+    task = (db.query(Task).filter(Task.id == task_id).first())
 
     if not task:
-        raise HTTPException(
-            status_code=404,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404,detail="Task not found")
 
-    project = (
-        db.query(Project)
-        .filter(Project.id == task.project_id)
-        .first()
-    )
+    project = (db.query(Project).filter(Project.id == task.project_id).first())
 
-    is_project_owner = (
-        project.owner_id == current_user.id
-    )
+    is_project_owner = (project.owner_id == current_user.id)
 
-    is_assignee = (
-        task.assignee_id == current_user.id
-    )
+    is_assignee = (task.assignee_id == current_user.id)
 
-    if not (
-        is_project_owner or is_assignee
-    ):
-        raise HTTPException(
-            status_code=403,
-            detail="Permission denied"
-        )
+    if not (is_project_owner or is_assignee):
+        raise HTTPException(status_code=403,detail="Permission denied")
 
     task.status = new_status
 

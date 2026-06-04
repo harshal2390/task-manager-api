@@ -13,10 +13,7 @@ class TaskCreate(BaseModel):
 
     status: TaskStatus = TaskStatus.TODO
 
-    priority: int = Field(
-        ge=1,
-        le=5
-    )
+    priority: int = Field(ge=1,le=5)
 
     assignee_id: int | None = None
 
@@ -28,11 +25,7 @@ class TaskUpdate(BaseModel):
     description: str | None = None
     status: TaskStatus | None = None
 
-    priority: int | None = Field(
-        default=None,
-        ge=1,
-        le=5
-    )
+    priority: int | None = Field(default=None,ge=1,le=5)
 
     assignee_id: int | None = None
 

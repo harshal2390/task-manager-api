@@ -20,22 +20,10 @@ class Project(Base):
 
     description: Mapped[str] = mapped_column(String)
 
-    owner_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id")
-    )
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow)
 
-    owner = relationship(
-        "User",
-        back_populates="projects"
-    )
+    owner = relationship("User",back_populates="projects")
 
-    tasks = relationship(
-        "Task",
-        back_populates="project",
-        cascade="all, delete-orphan"
-    )
+    tasks = relationship("Task",back_populates="project",cascade="all, delete-orphan")

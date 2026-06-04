@@ -23,43 +23,20 @@ class Task(Base):
 
     title: Mapped[str] = mapped_column(String)
 
-    description: Mapped[str] = mapped_column(
-        String,
-        nullable=True
-    )
+    description: Mapped[str] = mapped_column(String,nullable=True)
 
-    status: Mapped[TaskStatus] = mapped_column(
-        Enum(TaskStatus),
-        default=TaskStatus.TODO
-    )
+    status: Mapped[TaskStatus] = mapped_column(Enum(TaskStatus),default=TaskStatus.TODO)
 
     priority: Mapped[int] = mapped_column(Integer)
 
-    assignee_id: Mapped[int | None] = mapped_column(
-        ForeignKey("users.id"),
-        nullable=True
-    )
+    assignee_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"),nullable=True)
 
-    project_id: Mapped[int] = mapped_column(
-        ForeignKey("projects.id")
-    )
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"))
 
-    due_date: Mapped[date | None] = mapped_column(
-        Date,
-        nullable=True
-    )
+    due_date: Mapped[date | None] = mapped_column(Date,nullable=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow)
 
-    assignee = relationship(
-        "User",
-        back_populates="assigned_tasks"
-    )
+    assignee = relationship("User",back_populates="assigned_tasks")
 
-    project = relationship(
-        "Project",
-        back_populates="tasks"
-    )
+    project = relationship("Project",back_populates="tasks")

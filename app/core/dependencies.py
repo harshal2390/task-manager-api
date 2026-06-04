@@ -14,9 +14,7 @@ from app.core.config import settings
 from app.models.user import User
 
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/token"
-)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 def get_db():
@@ -44,11 +42,7 @@ def get_current_user(
 
     try:
 
-        payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
-            algorithms=[settings.ALGORITHM]
-        )
+        payload = jwt.decode(token,settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
 
         email = payload.get("sub")
 
