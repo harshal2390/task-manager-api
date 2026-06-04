@@ -27,13 +27,20 @@ class TaskUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     status: TaskStatus | None = None
+
     priority: int | None = Field(
         default=None,
         ge=1,
         le=5
     )
+
     assignee_id: int | None = None
+
     due_date: date | None = None
+
+
+class TaskStatusUpdate(BaseModel):
+    status: TaskStatus
 
 
 class TaskResponse(BaseModel):
