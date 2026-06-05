@@ -1,16 +1,9 @@
 from datetime import date
 from datetime import datetime
 
-from sqlalchemy import String
-from sqlalchemy import Integer
-from sqlalchemy import ForeignKey
-from sqlalchemy import DateTime
-from sqlalchemy import Date
-from sqlalchemy import Enum
+from sqlalchemy import (String,Integer,ForeignKey,DateTime,Date,Enum)
 
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column,relationship
 
 from app.models.base import Base
 from app.core.enums import TaskStatus

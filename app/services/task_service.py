@@ -1,13 +1,10 @@
-from fastapi import HTTPException
-from fastapi import status
+from fastapi import HTTPException,status
 
 from sqlalchemy.orm import Session
 
 from app.models.task import Task
 from app.models.project import Project
 from app.models.user import User
-
-
 
 from app.schemas.task import (TaskCreate,TaskUpdate,TaskResponse)
 
@@ -70,9 +67,7 @@ def update_task(db: Session,task_id: int,task_data: TaskUpdate,current_user: Use
 
     is_project_owner = (project.owner_id == current_user.id)
 
-    is_assignee = (
-        task.assignee_id == current_user.id
-    )
+    is_assignee = (task.assignee_id == current_user.id)
 
     if not (is_project_owner or is_assignee):
         raise HTTPException(status_code=403,detail="Permission denied")
