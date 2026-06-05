@@ -19,9 +19,9 @@ def test_1_register_user():
     response = client.post(
         "/auth/register",
         json={
-            "email": "pytest@example.com",
+            "email": "harshal@example.com",
             "password": "password123",
-            "full_name": "Pytest User"
+            "full_name": "Harshal Chaudhari"
         }
     )
 
@@ -35,7 +35,7 @@ def test_2_login_user():
     response = client.post(
         "/auth/token",
         data={
-            "username": "pytest@example.com",
+            "username": "harshal@example.com",
             "password": "password123"
         }
     )
