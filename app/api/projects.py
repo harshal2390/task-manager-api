@@ -26,5 +26,4 @@ current_user: User = Depends(
 
 @router.get("",response_model=list[ProjectResponse])
 def get_projects(db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
-
     return get_user_projects(db=db,current_user=current_user)

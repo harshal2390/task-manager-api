@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 
 from app.schemas.user import UserCreate
-# from app.models.project import Project
-# from app.models.task import Task
+
 
 from app.core.security import (hash_password,verify_password)
 
